@@ -4,11 +4,16 @@
 // named parameters and Zig style text formatting.
 //
 //--------------------------------------------------------------------------------------------------
-pub const plot = @import("plot.zig");
+const std = @import("std");
+const assert = std.debug.assert;
+
+const te_enabled = @import("zgui_options").with_te;
+
 pub const gizmo = @import("gizmo.zig");
-pub const node_editor = @import("node_editor.zig");
-pub const te = @import("te.zig");
 pub const knobs = @import("knobs.zig");
+pub const node_editor = @import("node_editor.zig");
+pub const plot = @import("plot.zig");
+pub const te = @import("te.zig");
 
 pub const backend = switch (@import("zgui_options").backend) {
     .glfw_wgpu => @import("backend_glfw_wgpu.zig"),
@@ -17,6 +22,7 @@ pub const backend = switch (@import("zgui_options").backend) {
     .glfw_vulkan => @import("backend_glfw_vulkan.zig"),
     .glfw => @import("backend_glfw.zig"),
     .win32_dx12 => @import("backend_win32_dx12.zig"),
+    .win32_wgpu => @import("backend_win32_wgpu.zig"),
     .osx_metal => @import("backend_osx_metal.zig"),
     .sdl2 => @import("backend_sdl2.zig"),
     .sdl2_opengl3 => @import("backend_sdl2_opengl.zig"),
@@ -27,10 +33,7 @@ pub const backend = switch (@import("zgui_options").backend) {
     .sdl3_gpu => @import("backend_sdl3_gpu.zig"),
     .no_backend => .{},
 };
-const te_enabled = @import("zgui_options").with_te;
 //--------------------------------------------------------------------------------------------------
-const std = @import("std");
-const assert = std.debug.assert;
 //--------------------------------------------------------------------------------------------------
 pub const f32_min: f32 = 1.17549435082228750796873653722225e-38;
 pub const f32_max: f32 = 3.40282346638528859811704183484517e+38;
@@ -127,6 +130,9 @@ pub fn deinitNoContext() void {
 extern fn zguiCreateContext(shared_font_atlas: ?*const anyopaque) Context;
 extern fn zguiDestroyContext(ctx: ?Context) void;
 extern fn zguiGetCurrentContext() ?Context;
+pub fn setCurrentContext(ctx: ?Context) void {
+    zguiSetCurrentContext(ctx);
+}
 extern fn zguiSetCurrentContext(ctx: ?Context) void;
 //--------------------------------------------------------------------------------------------------
 var mem_allocator: ?std.mem.Allocator = null;
@@ -801,6 +807,13 @@ extern fn zguiSetNextWindowSize(w: f32, h: f32, cond: Condition) void;
 extern fn zguiSetNextWindowContentSize(w: f32, h: f32) void;
 pub const setNextWindowContentSize = zguiSetNextWindowContentSize;
 //--------------------------------------------------------------------------------------------------
+// For each axis:
+// - Use 0.0f as min or FLT_MAX as max if you don't want limits, e.g. size_min = (500.0f, 0.0f), size_max = (FLT_MAX, FLT_MAX) sets a minimum width.
+// - Use -1 for both min and max of same axis to preserve current size which itself is a constraint.
+// - See "Demo->Examples->Constrained-resizing window" for examples.
+extern fn zguiSetNextWindowSizeConstraints(size_min: [*]const f32, size_max: [*]const f32, custom_callback: ?*const fn (data: *anyopaque) void, custom_callback_user_data: ?*anyopaque) void;
+pub const setNextWindowSizeConstraints = zguiSetNextWindowSizeConstraints;
+//--------------------------------------------------------------------------------------------------
 const SetNextWindowCollapsed = struct {
     collapsed: bool,
     cond: Condition = .none,
@@ -1077,6 +1090,8 @@ extern fn zguiDockBuilderAddNode(node_id: Ident, flags: DockNodeFlags) Ident;
 extern fn zguiDockBuilderRemoveNode(node_id: Ident) void;
 extern fn zguiDockBuilderSetNodePos(node_id: Ident, pos: *const [2]f32) void;
 extern fn zguiDockBuilderSetNodeSize(node_id: Ident, size: *const [2]f32) void;
+extern fn zguiDockBuilderSetNodeFlags(node_id: Ident, flags: DockNodeFlags) void;
+pub const dockBuilderSetNodeFlags = zguiDockBuilderSetNodeFlags;
 extern fn zguiDockBuilderSplitNode(
     node_id: Ident,
     split_dir: Direction,

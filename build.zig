@@ -7,6 +7,7 @@ pub const Backend = enum {
     glfw_vulkan,
     glfw_dx12,
     win32_dx12,
+    win32_wgpu,
     glfw,
     sdl2_opengl3,
     osx_metal,
@@ -311,6 +312,20 @@ pub fn build(b: *std.Build) void {
                 .flags = cflags,
             });
             imgui.linkSystemLibrary("d3dcompiler_47");
+            imgui.linkSystemLibrary("dwmapi");
+            switch (target.result.abi) {
+                .msvc => imgui.linkSystemLibrary("Gdi32"),
+                .gnu => imgui.linkSystemLibrary("gdi32"),
+                else => {},
+            }
+        },
+        .win32_wgpu => {
+            imgui.addCSourceFiles(.{
+                .files = &.{
+                    "libs/imgui/backends/imgui_impl_win32.cpp",
+                    "libs/imgui/backends/imgui_impl_wgpu.cpp",
+                },
+            });
             imgui.linkSystemLibrary("dwmapi");
             switch (target.result.abi) {
                 .msvc => imgui.linkSystemLibrary("Gdi32"),

@@ -54,6 +54,11 @@ extern "C"
         ImGui::SetNextWindowContentSize({w, h});
     }
 
+    ZGUI_API void zguiSetNextWindowSizeConstraints(float size_min[2], float size_max[2], ImGuiSizeCallback custom_callback, void *custom_callback_user_data)
+    {
+        ImGui::SetNextWindowSizeConstraints({size_min[0], size_min[1]}, {size_max[0], size_max[1]}, custom_callback, custom_callback_user_data);
+    }
+
     ZGUI_API void zguiSetNextWindowCollapsed(bool collapsed, ImGuiCond cond)
     {
         ImGui::SetNextWindowCollapsed(collapsed, cond);
@@ -63,7 +68,7 @@ extern "C"
     {
         ImGui::SetNextWindowFocus();
     }
-    
+
     ZGUI_API void zguiSetNextWindowScroll(float scroll_x, float scroll_y)
     {
         ImGui::SetNextWindowScroll({scroll_x, scroll_y});
@@ -84,12 +89,12 @@ extern "C"
         ImGui::SetKeyboardFocusHere(offset);
     }
 
-    ZGUI_API void zguiSetNavCursorVisible(bool visible) 
+    ZGUI_API void zguiSetNavCursorVisible(bool visible)
     {
         ImGui::SetNavCursorVisible(visible);
     }
 
-    ZGUI_API void zguiSetNextItemAllowOverlap() 
+    ZGUI_API void zguiSetNextItemAllowOverlap()
     {
         ImGui::SetNextItemAllowOverlap();
     }
@@ -644,7 +649,7 @@ extern "C"
         ImGui::EndListBox();
     }
 
-    ZGUI_API bool zguiListBox(const char* label, int* current_item, const char* const items[], int items_count, int height_in_items) 
+    ZGUI_API bool zguiListBox(const char *label, int *current_item, const char *const items[], int items_count, int height_in_items)
     {
         return ImGui::ListBox(label, current_item, items, items_count, height_in_items);
     }
@@ -1171,12 +1176,14 @@ extern "C"
         return ImGui::ProgressBar(fraction, {w, h}, overlay);
     }
 
-    ZGUI_API bool zguiTextLink(const char* label) {
-        return ImGui::TextLink(label) ;
+    ZGUI_API bool zguiTextLink(const char *label)
+    {
+        return ImGui::TextLink(label);
     }
 
-    ZGUI_API void zguiTextLinkOpenURL(const char* label, const char* url) {
-        ImGui::TextLinkOpenURL(label, url) ;
+    ZGUI_API void zguiTextLinkOpenURL(const char *label, const char *url)
+    {
+        ImGui::TextLinkOpenURL(label, url);
     }
 
     ZGUI_API ImGuiContext *zguiCreateContext(ImFontAtlas *shared_font_atlas)
@@ -1224,7 +1231,8 @@ extern "C"
         ImGui::ShowDemoWindow(p_open);
     }
 
-    ZGUI_API void zguiShowMetricsWindow(bool* p_open) {
+    ZGUI_API void zguiShowMetricsWindow(bool *p_open)
+    {
         ImGui::ShowMetricsWindow(p_open);
     }
 
@@ -1446,7 +1454,7 @@ extern "C"
         ImGui::TreePush(str_id);
     }
 
-    ZGUI_API float zguiGetTreeNodeToLabelSpacing() 
+    ZGUI_API float zguiGetTreeNodeToLabelSpacing()
     {
         return ImGui::GetTreeNodeToLabelSpacing();
     }
@@ -1547,7 +1555,7 @@ extern "C"
         return ImGui::GetIO().Fonts->AddFontFromMemoryTTF(font_data, font_size, size_pixels, &config, nullptr);
     }
 
-    ZGUI_API void zguiIoRemoveFont(ImFont* font)
+    ZGUI_API void zguiIoRemoveFont(ImFont *font)
     {
         ImGui::GetIO().Fonts->RemoveFont(font);
     }
@@ -1592,7 +1600,8 @@ extern "C"
         return ImGui::GetIO().WantTextInput;
     }
 
-    ZGUI_API float zguiIoFramerate() {
+    ZGUI_API float zguiIoFramerate()
+    {
         return ImGui::GetIO().Framerate;
     }
 
@@ -1673,7 +1682,7 @@ extern "C"
         ImGui::GetIO().AddInputCharacter(c);
     }
 
-    ZGUI_API ImVector<ImTextureData*>* zguiPlatformIoGetTextures()
+    ZGUI_API ImVector<ImTextureData *> *zguiPlatformIoGetTextures()
     {
         return &ImGui::GetPlatformIO().Textures;
     }
@@ -1723,7 +1732,7 @@ extern "C"
         return ImGui::GetMouseClickedCount(button);
     }
 
-    ZGUI_API bool zguiIsAnyMouseDown() 
+    ZGUI_API bool zguiIsAnyMouseDown()
     {
         return ImGui::IsAnyMouseDown();
     }
@@ -1820,7 +1829,7 @@ extern "C"
         ImGui::EndTabBar();
     }
 
-    ZGUI_API bool zguiTabItemButton(const char* label, ImGuiTabItemFlags flags ) 
+    ZGUI_API bool zguiTabItemButton(const char *label, ImGuiTabItemFlags flags)
     {
         return ImGui::TabItemButton(label, flags);
     }
@@ -1921,29 +1930,28 @@ extern "C"
     }
 
     ZGUI_API void zguiPlotLines(
-        const char* label, 
-        const float* values, 
-        int values_count, 
-        int values_offset, 
-        const char* overlay_text, 
-        float scale_min, 
-        float scale_max, 
-        float graph_size[2], 
+        const char *label,
+        const float *values,
+        int values_count,
+        int values_offset,
+        const char *overlay_text,
+        float scale_min,
+        float scale_max,
+        float graph_size[2],
         int stride)
     {
         ImGui::PlotLines(label, values, values_count, values_offset, overlay_text, scale_min, scale_max, ImVec2(graph_size[0], graph_size[1]), stride);
-    }  
-    
+    }
 
     ZGUI_API void zguiPlotHistogram(
-        const char* label, 
-        const float* values, 
-        int values_count, 
-        int values_offset, 
-        const char* overlay_text, 
-        float scale_min, 
-        float scale_max, 
-        float graph_size[2], 
+        const char *label,
+        const float *values,
+        int values_count,
+        int values_offset,
+        const char *overlay_text,
+        float scale_min,
+        float scale_max,
+        float graph_size[2],
         int stride)
     {
         ImGui::PlotHistogram(label, values, values_count, values_offset, overlay_text, scale_min, scale_max, ImVec2(graph_size[0], graph_size[1]), stride);
@@ -2043,7 +2051,7 @@ extern "C"
         ImGui::TableSetColumnEnabled(column_n, v);
     }
 
-    ZGUI_API int zguiTableGetHoveredColumn() 
+    ZGUI_API int zguiTableGetHoveredColumn()
     {
         return ImGui::TableGetHoveredColumn();
     }
@@ -2053,7 +2061,7 @@ extern "C"
         ImGui::TableSetBgColor(target, color, column_n);
     }
 
-    ZGUI_API void zguiColumns(int count , const char* id , bool borders)
+    ZGUI_API void zguiColumns(int count, const char *id, bool borders)
     {
         ImGui::Columns();
     }
@@ -2078,7 +2086,7 @@ extern "C"
         ImGui::SetColumnWidth(column_index, width);
     }
 
-    ZGUI_API float zguiGetColumnOffset(int column_index ) //-1
+    ZGUI_API float zguiGetColumnOffset(int column_index) //-1
     {
         return ImGui::GetColumnOffset(column_index);
     }
@@ -2141,17 +2149,17 @@ extern "C"
         return ImGui::IsKeyReleased(key);
     }
 
-    ZGUI_API void zguiSetNextFrameWantCaptureKeyboard(bool want_capture_keyboard) 
+    ZGUI_API void zguiSetNextFrameWantCaptureKeyboard(bool want_capture_keyboard)
     {
         ImGui::SetNextFrameWantCaptureKeyboard(want_capture_keyboard);
     }
 
-    ZGUI_API int zguiGetKeyPressedAmount(ImGuiKey key, float repeat_delay, float rate) 
+    ZGUI_API int zguiGetKeyPressedAmount(ImGuiKey key, float repeat_delay, float rate)
     {
         return ImGui::GetKeyPressedAmount(key, repeat_delay, rate);
     }
 
-    ZGUI_API void zguiSetItemKeyOwner(ImGuiKey key) 
+    ZGUI_API void zguiSetItemKeyOwner(ImGuiKey key)
     {
         ImGui::SetItemKeyOwner(key);
     }
@@ -2412,7 +2420,7 @@ extern "C"
         const float center[2],
         const float radius[2],
         ImU32 col,
-		float rot,
+        float rot,
         int num_segments,
         float thickness)
     {
@@ -2424,7 +2432,7 @@ extern "C"
         const float center[2],
         const float radius[2],
         ImU32 col,
-		float rot,
+        float rot,
         int num_segments)
     {
         draw_list->AddEllipseFilled({center[0], center[1]}, {radius[0], radius[1]}, col, rot, num_segments);
@@ -2463,16 +2471,16 @@ extern "C"
 
     ZGUI_API void zguiDrawList_AddTextExtended(
         ImDrawList *draw_list,
-        ImFont* font, 
-        float font_size, 
-        const float pos[2], 
-        ImU32 col, 
-        const char* text_begin, 
-        const char* text_end, 
-        float wrap_width, 
+        ImFont *font,
+        float font_size,
+        const float pos[2],
+        ImU32 col,
+        const char *text_begin,
+        const char *text_end,
+        float wrap_width,
         const float cpu_fine_clip_rect[][4])
-    {   
-        const ImVec4* clip_rect = (cpu_fine_clip_rect != nullptr) ? (const ImVec4 *)&cpu_fine_clip_rect[0][0] : nullptr;
+    {
+        const ImVec4 *clip_rect = (cpu_fine_clip_rect != nullptr) ? (const ImVec4 *)&cpu_fine_clip_rect[0][0] : nullptr;
         draw_list->AddText(font, font_size, {pos[0], pos[1]}, col, text_begin, text_end, wrap_width, clip_rect);
     }
 
@@ -2653,7 +2661,7 @@ extern "C"
         ImDrawList *draw_list,
         const float center[2],
         const float radius[2],
-		float rot,
+        float rot,
         int a_min,
         int a_max,
         int num_segments)
@@ -2804,11 +2812,13 @@ extern "C"
         p[1] = sz.y;
     }
 
-    ZGUI_API void zguiUpdatePlatformWindows() {
+    ZGUI_API void zguiUpdatePlatformWindows()
+    {
         ImGui::UpdatePlatformWindows();
     }
 
-    ZGUI_API void zguiRenderPlatformWindowsDefault() {
+    ZGUI_API void zguiRenderPlatformWindowsDefault()
+    {
         ImGui::RenderPlatformWindowsDefault();
     }
 
@@ -2832,7 +2842,7 @@ extern "C"
     // DockBuilder (Unstable internal imgui API, subject to change, use at own risk)
     //
     //--------------------------------------------------------------------------------------------------
-    ZGUI_API void zguiDockNodeRect(const ImGuiDockNode* node, ImRect* out_rect)
+    ZGUI_API void zguiDockNodeRect(const ImGuiDockNode *node, ImRect *out_rect)
     {
         *out_rect = node->Rect();
     }
@@ -2842,12 +2852,12 @@ extern "C"
         ImGui::DockBuilderDockWindow(window_name, node_id);
     }
 
-    ZGUI_API ImGuiDockNode* zguiDockBuilderGetNode(ImGuiID node_id)
+    ZGUI_API ImGuiDockNode *zguiDockBuilderGetNode(ImGuiID node_id)
     {
         return ImGui::DockBuilderGetNode(node_id);
     }
 
-    ZGUI_API ImGuiDockNode* zguiDockBuilderGetCentralNode(ImGuiID node_id)
+    ZGUI_API ImGuiDockNode *zguiDockBuilderGetCentralNode(ImGuiID node_id)
     {
         return ImGui::DockBuilderGetCentralNode(node_id);
     }
@@ -2890,5 +2900,13 @@ extern "C"
     ZGUI_API void zguiDockBuilderFinish(ImGuiID node_id)
     {
         ImGui::DockBuilderFinish(node_id);
+    }
+
+    ZGUI_API void zguiDockBuilderSetNodeFlags(ImGuiID node_id, ImGuiDockNodeFlags flags)
+    {
+        if (ImGuiDockNode *node = ImGui::DockBuilderGetNode(node_id))
+        {
+            node->SetLocalFlags(flags);
+        }
     }
 } /* extern "C" */
